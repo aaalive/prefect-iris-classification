@@ -5,3 +5,4 @@ mlruns/
 .env
 .prefect/
 mlflow.db
+classification_report.txt

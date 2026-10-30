@@ -142,7 +142,8 @@ test_1            | =============================== warnings summary ===========
 5. Monitor the run progress in the UI
 6. Add a picture below showing the run success from prefect GUI
 
-![add picture](/path/to/file)
+![Prefect run](images/prefect_run.png)
+![MLflow run](images/mlflow_run.png)
 
 ### Option 2: Using the Command Line
 
@@ -155,8 +156,14 @@ docker compose exec prefect-worker prefect deployment run 'iris-classification-f
 Add below screen of the terminal :
 
 ```sh
-# Add a output of your terminal (a short piece showing the successfull run)
-```
+(base) nasya@Nasyas-MacBook-Pro prefect-iris-classification %    docker compose exec prefect-worker prefect deployment run 'iris-classification-flow/iris-model'
+Creating flow run for deployment 'iris-classification-flow/iris-model'...
+Created flow run 'dashing-kakapo'.
+└── UUID: 0a1958af-f1b4-40ee-8246-125fec02b135
+└── Parameters: {}
+└── Job Variables: {}
+└── Scheduled start time: 2026-10-30 13:29:28 UTC (now)
+└── URL: http://127.0.0.1:4200/runs/flow-run/0a1958af-f1b4-40ee-8246-125fec02b135```
 
 ## Monitoring and Tracking
 

@@ -2,3 +2,6 @@ __pycache__/
 .venv/
 .pytest_cache/
 mlruns/
+.env
+.prefect/
+mlflow.db

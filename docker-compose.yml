@@ -72,22 +72,31 @@ services:
             retries: 5
             start_period: 30s
 
-    # TODO: Implement the prefect-init service
-    # This service should:
-    # 1. Use the prefect.Dockerfile
-    # 2. Depend on prefect-server being healthy
-    # 3. Set the following environment variables:
-    #    - PREFECT_API_URL
-    #    - GITHUB_TOKEN (if using remote github repository to fetch the flow)
-    #    - GITHUB_REPOSITORY (if using remote github repository to fetch the flow)
-    #    - GITHUB_BRANCH (if using remote github repository to fetch the flow)
-    #    - MLFLOW_TRACKING_URI
-    # 4. Mount the current directory to /app
-    # 5. Run the following commands in sequence:
-    #    - Initialize blocks using init.py
-    #    - Create work pool 'ml-pool'
-    #    - Create deployment using create_deployment.py
-    prefect-init: None
+    # Runs once: create blocks + variables, create the work pool, create the deployment.
+    prefect-init:
+        build:
+            context: .
+            dockerfile: docker_files/prefect.Dockerfile
+        container_name: prefect-init
+        depends_on:
+            prefect-server:
+                condition: service_healthy
+            mlflow:
+                condition: service_healthy
+        environment:
+            - PREFECT_API_URL=http://prefect-server:4200/api
+            - GITHUB_TOKEN=${GH_TOKEN}
+            - GITHUB_REPOSITORY=${GITHUB_REPOSITORY}
+            - GITHUB_BRANCH=${GITHUB_BRANCH:-main}
+            - MLFLOW_TRACKING_URI=http://mlflow:5000
+        volumes:
+            - .:/app
+        working_dir: /app
+        command: >
+            sh -c "python init_blocks/init.py &&
+            (prefect work-pool inspect ml-pool > /dev/null 2>&1 || prefect work-pool create ml-pool --type process) &&
+            python deployments/create_deployment.py"
+        restart: "no"
 
     prefect-worker:
         build:

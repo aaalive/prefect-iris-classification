@@ -24,8 +24,8 @@ def test_docker_deployment():
     
     # Check if the required images exist
     required_images = [
-        "<name-of-mlflow-container>:latest",
-        "<name-of-prefect-server-container>:latest"
+        "prefect-iris-classification-mlflow:latest",
+        "prefect-iris-classification-prefect-server:latest"
     ]
     
     # Get list of Docker images
